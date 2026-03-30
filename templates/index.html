@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>EthosEye | Hate Speech Detector</title>
+    <title>Hate Speech Detector | 3-Class AI Analysis</title>
+    <!-- Google Fonts & simple CSS reset -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -22,8 +23,9 @@
             padding: 2rem 1.5rem;
         }
 
+        /* main glass-morphism card */
         .detector-card {
-            max-width: 680px;
+            max-width: 720px;
             width: 100%;
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(2px);
@@ -40,6 +42,7 @@
             }
         }
 
+        /* header area */
         .title-section {
             text-align: center;
             margin-bottom: 2rem;
@@ -59,13 +62,8 @@
             backdrop-filter: blur(2px);
         }
 
-        .badge i {
-            font-style: normal;
-            margin-right: 0.3rem;
-        }
-
         h1 {
-            font-size: 1.9rem;
+            font-size: 2rem;
             font-weight: 700;
             background: linear-gradient(135deg, #1e293b, #2d3a4e);
             background-clip: text;
@@ -84,6 +82,36 @@
             padding-top: 0.5rem;
         }
 
+        /* 3-class badges */
+        .class-badges {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .mini-badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+
+        .mini-badge.normal {
+            background: #dcfce7;
+            color: #15803d;
+        }
+        .mini-badge.offensive {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+        .mini-badge.hate {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* form styling */
         .input-group {
             margin: 1.8rem 0 1.2rem;
         }
@@ -110,6 +138,7 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
 
+        /* button */
         .btn-analyze {
             background: #1e293b;
             border: none;
@@ -128,7 +157,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
             margin-top: 0.5rem;
             width: auto;
-            min-width: 160px;
+            min-width: 180px;
         }
 
         .btn-analyze:hover {
@@ -141,6 +170,7 @@
             transform: scale(0.96);
         }
 
+        /* result card (main verdict) - 3 classes */
         .result-area {
             margin: 2rem 0 1.5rem;
             background: #f8fafc;
@@ -156,13 +186,13 @@
             border-left-color: #10b981;
             background: #f0fdf9;
         }
-        .result-toxic {
+        .result-offensive {
+            border-left-color: #f97316;
+            background: #fffbeb;
+        }
+        .result-hate {
             border-left-color: #ef4444;
             background: #fef2f2;
-        }
-        .result-neutral {
-            border-left-color: #f59e0b;
-            background: #fffbeb;
         }
 
         .verdict-text {
@@ -170,31 +200,68 @@
             font-weight: 700;
             margin-bottom: 0.25rem;
             letter-spacing: -0.2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
         }
-
-        .verdict-icon {
-            font-size: 1.6rem;
-            line-height: 1;
-        }
-
         .verdict-sub {
             font-size: 0.85rem;
             color: #334155;
         }
 
-        .metrics-container {
-            margin-top: 1.8rem;
+        /* Highlight section - word-level tagging */
+        .highlight-section {
             background: #ffffffcc;
             border-radius: 1.25rem;
-            padding: 1rem 0.5rem 1rem 0.5rem;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border: 1px solid #eef2ff;
+        }
+
+        .highlight-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #5b6e8c;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .highlight-text {
+            font-size: 1rem;
+            line-height: 1.65;
+            color: #1e293b;
+            word-break: break-word;
+        }
+
+        .hate-word {
+            background: #fee2e2;
+            color: #dc2626;
+            font-weight: 700;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.375rem;
+            display: inline-block;
+        }
+
+        .offensive-word {
+            background: #ffedd5;
+            color: #ea580c;
+            font-weight: 600;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.375rem;
+            display: inline-block;
+        }
+
+        /* probability meters - 3 bars */
+        .metrics-container {
+            margin-top: 1.5rem;
+            background: #ffffffcc;
+            border-radius: 1.25rem;
+            padding: 1rem 0.8rem;
         }
 
         .metric-item {
-            margin-bottom: 1.4rem;
+            margin-bottom: 1.2rem;
         }
 
         .metric-header {
@@ -213,27 +280,30 @@
         }
 
         .normal-badge {
-            color: #15803d;
             background: #dcfce7;
+            color: #15803d;
             padding: 0.2rem 0.6rem;
             border-radius: 30px;
             font-size: 0.7rem;
             font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
         }
 
-        .toxic-badge {
-            color: #b91c1c;
-            background: #fee2e2;
+        .offensive-badge {
+            background: #ffedd5;
+            color: #9a3412;
             padding: 0.2rem 0.6rem;
             border-radius: 30px;
             font-size: 0.7rem;
             font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
+        }
+
+        .hate-badge {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
         }
 
         .percentage {
@@ -257,13 +327,36 @@
             transition: width 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
 
-        .fill-green {
+        .fill-normal {
             background: linear-gradient(90deg, #22c55e, #16a34a);
         }
-        .fill-red {
-            background: linear-gradient(90deg, #f97316, #dc2626);
+        .fill-offensive {
+            background: linear-gradient(90deg, #f97316, #ea580c);
+        }
+        .fill-hate {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
         }
 
+        /* insight box */
+        .insight-box {
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            background: #f1f5f9;
+            border-radius: 1rem;
+            padding: 0.6rem 0.9rem;
+            text-align: center;
+        }
+
+        /* empty state */
+        .empty-message {
+            text-align: center;
+            color: #6c757d;
+            padding: 1.2rem;
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        /* footer */
         .info-note {
             margin-top: 2rem;
             text-align: center;
@@ -273,21 +366,19 @@
             padding-top: 1rem;
         }
 
-        .empty-message {
-            text-align: center;
-            color: #6c757d;
-            padding: 0.8rem;
-            font-style: italic;
-            font-size: 0.85rem;
+        /* animations */
+        button i {
+            font-style: normal;
+            font-weight: 600;
         }
-
-        .insight-box {
-            margin-top: 1rem;
-            font-size: 0.75rem;
-            background: #f1f5f9;
-            border-radius: 1rem;
-            padding: 0.6rem 0.9rem;
-            text-align: center;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
         }
     </style>
 </head>
@@ -295,123 +386,156 @@
 
 <div class="detector-card">
     <div class="title-section">
-        <span class="badge">
-            <i>⚡</i> AI-Powered • High Accuracy
-        </span>
-        <h1>EthosEye</h1>
-        <div class="subhead">Real-time hate speech & toxic content detection</div>
+        <span class="badge">⚡ 3-Class AI • High Accuracy</span>
+        <h1>Hate Speech Detection</h1>
+        <div class="subhead">Real-time classification: Normal · Offensive · Hate Speech</div>
+        <div class="class-badges">
+            <span class="mini-badge normal"> Normal</span>
+            <span class="mini-badge offensive"> Offensive</span>
+            <span class="mini-badge hate">Hate Speech</span>
+        </div>
     </div>
 
     <form method="POST" id="analysisForm">
         <div class="input-group">
             <textarea 
                 name="text" 
-                placeholder="Paste or type a sentence, comment, or message...&#10;Example: 'I strongly disagree with your opinion, but I respect your voice.'"
+                placeholder="Paste or type a sentence, comment, or message...&#10;&#10;Example: 'I disagree with your opinion' or 'You're an idiot'"
                 rows="4"
                 id="inputTextArea"
             ></textarea>
         </div>
         <div style="display: flex; justify-content: center;">
             <button type="submit" class="btn-analyze">
-                Analyze Text.
+                Analyze Text
             </button>
         </div>
     </form>
 
+    <!-- Result block: shows main prediction verdict (3-class) -->
     {% if result %}
-    <div class="result-area 
-        {% if 'Normal' in result or 'normal' in result %}result-normal
-        {% elif 'Toxic' in result or 'toxic' in result %}result-toxic
-        {% else %}result-neutral{% endif %}">
+    <div class="result-area fade-in 
+        {% if 'Normal' in result %}result-normal
+        {% elif 'Offensive' in result %}result-offensive
+        {% elif 'Hate' in result %}result-hate
+        {% else %}result-normal{% endif %}">
         <div class="verdict-text">
-            <span class="verdict-icon">
-                {% if 'Normal' in result %}
-                    ✓
-                {% elif 'Toxic' in result %}
-                    ⚠
-                {% else %}
-                    ◇
-                {% endif %}
-            </span>
-            <span>{{ result }}</span>
+            {% if 'Normal' in result %}
+                ✅ {{ result }}
+            {% elif 'Offensive' in result %}
+                ⚠️ {{ result }}
+            {% elif 'Hate' in result %}
+                🚫 {{ result }}
+            {% else %}
+                📊 {{ result }}
+            {% endif %}
         </div>
         <div class="verdict-sub">
             {% if 'Normal' in result %}
                 This content appears respectful and constructive.
-            {% elif 'Toxic' in result %}
-                Harmful language detected — promotes a safer internet when flagged.
+            {% elif 'Offensive' in result %}
+                Offensive language detected — consider revising for respectful communication.
+            {% elif 'Hate' in result %}
+                Hate speech detected — this violates community guidelines.
             {% else %}
-                Confidence score based on deep learning model.
+                AI-powered classification based on semantic patterns.
             {% endif %}
         </div>
     </div>
     {% endif %}
 
+    <!-- Word Highlighting Section (preserves full functionality) -->
+    {% if highlighted_text %}
+    <div class="highlight-section fade-in">
+        <div class="highlight-label">
+            <span>🏷️</span> Word-level classification
+        </div>
+        <div class="highlight-text">
+            {% for word, tag in highlighted_text %}
+                {% if tag == "hate" %}
+                    <span class="hate-word">{{ word }}</span>
+                {% elif tag == "offensive" %}
+                    <span class="offensive-word">{{ word }}</span>
+                {% else %}
+                    {{ word }}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Probability bars: Normal, Offensive, Hate (3-class) -->
     {% if probs %}
-    <div class="metrics-container">
+    <div class="metrics-container fade-in">
+        <!-- Normal metric -->
         <div class="metric-item">
             <div class="metric-header">
                 <div class="metric-name">
-                    <span class="normal-badge">
-                        <span>◉</span> Normal / Safe
-                    </span>
+                    <span class="normal-badge"> Normal / Safe</span>
                 </div>
                 <div class="percentage">{{ "%.2f"|format(probs[0]*100) }}%</div>
             </div>
             <div class="progress-bar-bg">
-                <div class="progress-fill fill-green" style="width: {{ probs[0]*100 }}%;"></div>
+                <div class="progress-fill fill-normal" style="width: {{ probs[0]*100 }}%;"></div>
             </div>
         </div>
+        
+        <!-- Offensive metric -->
         <div class="metric-item">
             <div class="metric-header">
                 <div class="metric-name">
-                    <span class="toxic-badge">
-                        <span>◉</span> Toxic / Hate Speech
-                    </span>
+                    <span class="offensive-badge"> Offensive</span>
                 </div>
                 <div class="percentage">{{ "%.2f"|format(probs[1]*100) }}%</div>
             </div>
             <div class="progress-bar-bg">
-                <div class="progress-fill fill-red" style="width: {{ probs[1]*100 }}%;"></div>
+                <div class="progress-fill fill-offensive" style="width: {{ probs[1]*100 }}%;"></div>
             </div>
         </div>
         
+        <!-- Hate metric -->
+        <div class="metric-item">
+            <div class="metric-header">
+                <div class="metric-name">
+                    <span class="hate-badge"> Hate Speech</span>
+                </div>
+                <div class="percentage">{{ "%.2f"|format(probs[2]*100) }}%</div>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-fill fill-hate" style="width: {{ probs[2]*100 }}%;"></div>
+            </div>
+        </div>
+        
+        <!-- Dynamic insight based on highest probability -->
         <div class="insight-box">
-            {% if probs[1] > 0.7 %}
-                ▲ High toxicity — consider revision before publishing.
-            {% elif probs[1] > 0.45 %}
-                ◇ Borderline language — may be perceived as offensive.
-            {% elif probs[0] > 0.85 %}
-                ▼ Clean & constructive conversation.
+            {% if probs[2] > 0.6 %}
+                🚨 High hate speech confidence — content violates safety guidelines.
+            {% elif probs[1] > 0.5 %}
+                ⚖️ Offensive language detected — consider more respectful phrasing.
+            {% elif probs[0] > 0.8 %}
+                🌿 Clean content — promotes healthy conversation.
             {% else %}
-                ○ Model confidence: based on semantic patterns.
+                📝 Mixed signals — review highlighted words for context.
             {% endif %}
         </div>
     </div>
     {% else %}
-        {% if not result %}
+        {% if not result and not highlighted_text %}
         <div class="empty-message">
-            ◇ Enter text above and click "Analyze" <br> to get high-accuracy hate speech detection.
+            ✨ Enter text above and click "Analyze 3-Class" <br> to get normal, offensive, or hate speech classification.
         </div>
         {% endif %}
     {% endif %}
 
     <div class="info-note">
-        ◉ Trained on multilingual hate speech dataset • 99.2% AUROC • Real-time explainable AI
+        🧠 3-Class Detection: Normal · Offensive · Hate Speech • Real-time AI • Word-level explainability
     </div>
 </div>
 
+<!-- Smooth animation script for progress bars -->
 <script>
     (function() {
-        const textarea = document.getElementById('inputTextArea');
-        if (textarea) {
-            textarea.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'scale(1.01)';
-            });
-            textarea.addEventListener('blur', function() {
-                this.parentElement.style.transform = 'scale(1)';
-            });
-        }
+        // Animate progress bars on load if they exist
         const fills = document.querySelectorAll('.progress-fill');
         if (fills.length) {
             fills.forEach(fill => {
@@ -423,6 +547,17 @@
                     fill.style.transition = 'width 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1)';
                     fill.style.width = currentWidth;
                 }
+            });
+        }
+        
+        // Optional: preserve textarea focus effect
+        const textarea = document.getElementById('inputTextArea');
+        if (textarea) {
+            textarea.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.01)';
+            });
+            textarea.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
             });
         }
     })();

@@ -13,14 +13,28 @@ print("Loading dataset...")
 df = pd.read_csv("train.csv")
 df = df.dropna()
 
-# Convert multi-label → single label
-toxic_cols = ["toxic","severe_toxic","obscene","threat","insult","identity_hate"]
-df["label"] = df[toxic_cols].max(axis=1)
+# 🔥 SMART 3-CLASS LABEL LOGIC
+def convert_label(row):
+    # Hate (strong)
+    if row["identity_hate"] == 1 or row["threat"] == 1:
+        return 2
+    
+    elif row["severe_toxic"] == 1:
+        return 2
+    
+    # Offensive (medium)
+    elif row[["toxic","obscene","insult"]].max() == 1:
+        return 1
+    
+    else:
+        return 0
+
+df["label"] = df.apply(convert_label, axis=1)
 
 df = df[["comment_text","label"]]
 df.rename(columns={"comment_text":"text"}, inplace=True)
 
-# Normalize text
+# Normalize
 df["text"] = df["text"].str.lower()
 
 # Shuffle
@@ -52,7 +66,6 @@ class HateDataset(Dataset):
             max_length=128,
             return_tensors="pt"
         )
-
         item = {key: val.squeeze() for key, val in encoding.items()}
         item["labels"] = torch.tensor(self.labels[idx])
         return item
@@ -67,7 +80,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model = AutoModelForSequenceClassification.from_pretrained(
     "bert-base-multilingual-cased",
-    num_labels=2
+    num_labels=3
 )
 
 model.to(device)
@@ -86,7 +99,8 @@ optimizer = AdamW(model.parameters(), lr=2e-5)
 
 print("Training started...")
 
-epochs = 4
+epochs = 3
+best_acc = 0
 
 for epoch in range(epochs):
     model.train()
@@ -129,8 +143,11 @@ for epoch in range(epochs):
 
     print(f"Epoch {epoch+1} | Loss: {avg_loss:.4f} | Val Accuracy: {acc:.4f}")
 
-# Save
-model.save_pretrained("saved_model")
-tokenizer.save_pretrained("saved_model")
+    # Save best model
+    if acc > best_acc:
+        best_acc = acc
+        model.save_pretrained("saved_model")
+        tokenizer.save_pretrained("saved_model")
+        print("🔥 Best model saved")
 
-print("✅ High accuracy model trained")
+print("✅ Training Complete")
