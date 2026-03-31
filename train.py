@@ -13,16 +13,16 @@ print("Loading dataset...")
 df = pd.read_csv("train.csv")
 df = df.dropna()
 
-# 🔥 SMART 3-CLASS LABEL LOGIC
+
 def convert_label(row):
-    # Hate (strong)
+
     if row["identity_hate"] == 1 or row["threat"] == 1:
         return 2
     
     elif row["severe_toxic"] == 1:
         return 2
     
-    # Offensive (medium)
+
     elif row[["toxic","obscene","insult"]].max() == 1:
         return 1
     
@@ -34,20 +34,20 @@ df["label"] = df.apply(convert_label, axis=1)
 df = df[["comment_text","label"]]
 df.rename(columns={"comment_text":"text"}, inplace=True)
 
-# Normalize
+
 df["text"] = df["text"].str.lower()
 
-# Shuffle
+
 df = df.sample(frac=1).reset_index(drop=True)
 
 print("Dataset size:", df.shape)
 
-# Split
+
 train_texts, val_texts, train_labels, val_labels = train_test_split(
     df["text"], df["label"], test_size=0.1, stratify=df["label"]
 )
 
-# Tokenizer
+
 tokenizer = AutoTokenizer.from_pretrained("bert-base-multilingual-cased")
 
 class HateDataset(Dataset):
@@ -85,7 +85,6 @@ model = AutoModelForSequenceClassification.from_pretrained(
 
 model.to(device)
 
-# Class weights
 class_weights = compute_class_weight(
     class_weight="balanced",
     classes=np.unique(train_labels),
@@ -123,7 +122,7 @@ for epoch in range(epochs):
 
     avg_loss = total_loss / len(train_loader)
 
-    # Validation
+
     model.eval()
     preds, actuals = [], []
 
@@ -143,11 +142,11 @@ for epoch in range(epochs):
 
     print(f"Epoch {epoch+1} | Loss: {avg_loss:.4f} | Val Accuracy: {acc:.4f}")
 
-    # Save best model
+
     if acc > best_acc:
         best_acc = acc
         model.save_pretrained("saved_model")
         tokenizer.save_pretrained("saved_model")
         print("🔥 Best model saved")
 
-print("✅ Training Complete")
+print(" Training Complete")

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Hate Speech Detector | 3-Class AI Analysis</title>
-    <!-- Google Fonts & simple CSS reset -->
+  
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -23,7 +23,6 @@
             padding: 2rem 1.5rem;
         }
 
-        /* main glass-morphism card */
         .detector-card {
             max-width: 720px;
             width: 100%;
@@ -42,7 +41,7 @@
             }
         }
 
-        /* header area */
+  
         .title-section {
             text-align: center;
             margin-bottom: 2rem;
@@ -82,7 +81,7 @@
             padding-top: 0.5rem;
         }
 
-        /* 3-class badges */
+
         .class-badges {
             display: flex;
             justify-content: center;
@@ -111,7 +110,7 @@
             color: #b91c1c;
         }
 
-        /* form styling */
+
         .input-group {
             margin: 1.8rem 0 1.2rem;
         }
@@ -138,7 +137,7 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
 
-        /* button */
+
         .btn-analyze {
             background: #1e293b;
             border: none;
@@ -170,7 +169,7 @@
             transform: scale(0.96);
         }
 
-        /* result card (main verdict) - 3 classes */
+
         .result-area {
             margin: 2rem 0 1.5rem;
             background: #f8fafc;
@@ -206,7 +205,7 @@
             color: #334155;
         }
 
-        /* Highlight section - word-level tagging */
+
         .highlight-section {
             background: #ffffffcc;
             border-radius: 1.25rem;
@@ -252,7 +251,7 @@
             display: inline-block;
         }
 
-        /* probability meters - 3 bars */
+
         .metrics-container {
             margin-top: 1.5rem;
             background: #ffffffcc;
@@ -337,7 +336,7 @@
             background: linear-gradient(90deg, #ef4444, #dc2626);
         }
 
-        /* insight box */
+
         .insight-box {
             margin-top: 1rem;
             font-size: 0.75rem;
@@ -347,7 +346,7 @@
             text-align: center;
         }
 
-        /* empty state */
+
         .empty-message {
             text-align: center;
             color: #6c757d;
@@ -356,7 +355,7 @@
             font-size: 0.85rem;
         }
 
-        /* footer */
+
         .info-note {
             margin-top: 2rem;
             text-align: center;
@@ -366,7 +365,7 @@
             padding-top: 1rem;
         }
 
-        /* animations */
+
         button i {
             font-style: normal;
             font-weight: 600;
@@ -412,7 +411,6 @@
         </div>
     </form>
 
-    <!-- Result block: shows main prediction verdict (3-class) -->
     {% if result %}
     <div class="result-area fade-in 
         {% if 'Normal' in result %}result-normal
@@ -444,7 +442,7 @@
     </div>
     {% endif %}
 
-    <!-- Word Highlighting Section (preserves full functionality) -->
+
     {% if highlighted_text %}
     <div class="highlight-section fade-in">
         <div class="highlight-label">
@@ -464,10 +462,10 @@
     </div>
     {% endif %}
 
-    <!-- Probability bars: Normal, Offensive, Hate (3-class) -->
+
     {% if probs %}
     <div class="metrics-container fade-in">
-        <!-- Normal metric -->
+
         <div class="metric-item">
             <div class="metric-header">
                 <div class="metric-name">
@@ -480,7 +478,7 @@
             </div>
         </div>
         
-        <!-- Offensive metric -->
+
         <div class="metric-item">
             <div class="metric-header">
                 <div class="metric-name">
@@ -493,7 +491,7 @@
             </div>
         </div>
         
-        <!-- Hate metric -->
+
         <div class="metric-item">
             <div class="metric-header">
                 <div class="metric-name">
@@ -506,7 +504,7 @@
             </div>
         </div>
         
-        <!-- Dynamic insight based on highest probability -->
+   
         <div class="insight-box">
             {% if probs[2] > 0.6 %}
                 🚨 High hate speech confidence — content violates safety guidelines.
@@ -528,14 +526,14 @@
     {% endif %}
 
     <div class="info-note">
-        🧠 3-Class Detection: Normal · Offensive · Hate Speech • Real-time AI • Word-level explainability
+         3-Class Detection: Normal · Offensive · Hate Speech • Real-time AI • Word-level explainability
     </div>
 </div>
 
-<!-- Smooth animation script for progress bars -->
+
 <script>
     (function() {
-        // Animate progress bars on load if they exist
+   
         const fills = document.querySelectorAll('.progress-fill');
         if (fills.length) {
             fills.forEach(fill => {
@@ -550,7 +548,7 @@
             });
         }
         
-        // Optional: preserve textarea focus effect
+     
         const textarea = document.getElementById('inputTextArea');
         if (textarea) {
             textarea.addEventListener('focus', function() {
